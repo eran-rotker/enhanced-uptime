@@ -37,7 +37,7 @@ import { CardConfig, DurationConfig } from './types/config';
 import { clip, template, unwrap, wrap } from './utils';
 
 /* eslint no-console: 0 */
-console.info(`%c uptime-card \n   ${CARD_VERSION}    `, 'color: white; background-color: #C6B145; font-weight: 700;');
+console.info(`%c uptime-card \n    ${CARD_VERSION}    `, 'color: white; background-color: #C6B145; font-weight: 700;');
 
 // This puts your card into the UI card picker dialog
 (window as any).customCards = (window as any).customCards || [];
@@ -111,6 +111,7 @@ export class UptimeCard extends LitElement {
       init: { ...DEFAULT_INIT, ...config.init },
       clip: { ...DEFAULT_CLIP, ...config.clip },
       duration: { ...DEFAULT_DURATION, ...deprecatedDuration, ...config.duration },
+      icon_color: config.icon_color,
     };
 
     if (typeof this.config.ok == 'string') this.config.ok = [this.config.ok];
@@ -676,10 +677,10 @@ export class UptimeCard extends LitElement {
   }
 
   private renderIcon(): TemplateResult | string {
-    const { icon, ko_icon, none_icon, show, icon_adaptive_color, color } = this.config;
+    const { icon, ko_icon, none_icon, show, icon_adaptive_color, color, icon_color } = this.config;
     const status = this.isOk(this.getStatus());
     const customIcon = status === undefined && none_icon ? none_icon : status === false && ko_icon ? ko_icon : icon;
-    const customIconColor = status === false && color.ko_icon ? color.ko_icon : color.icon;
+    const customIconColor = icon_color || (status === false && color.ko_icon ? color.ko_icon : color.icon);
 
     const currentIcon = customIcon || this.sensor?.attributes.icon || DEFAULT_ICON;
     const imageStyle = `background-image: url(${currentIcon}); background-size: cover;`;
